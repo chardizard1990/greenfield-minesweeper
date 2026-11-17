@@ -2,11 +2,9 @@ package com.minesweeper.gui;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import com.minesweeper.gui.scenes.*;
 
 /**
  * Main JavaFX Application class for Greenfield Minesweeper GUI.
@@ -42,9 +40,19 @@ public class GuiApplication extends Application {
             primaryStage.setResizable(true);
             primaryStage.setOnCloseRequest(e -> onApplicationClose());
 
-            // Create and set initial scene (temporary placeholder)
-            Scene scene = createPlaceholderScene();
-            primaryStage.setScene(scene);
+            // Initialize scene manager with primary stage
+            SceneManager sceneManager = SceneManager.getInstance();
+            sceneManager.initialize(primaryStage);
+
+            // Register all scene controllers
+            sceneManager.registerScene(SceneManager.SceneType.MAIN_MENU, new MainMenuController());
+            sceneManager.registerScene(SceneManager.SceneType.MODE_SELECTION, new ModeSelectionController());
+            sceneManager.registerScene(SceneManager.SceneType.GAME_BOARD, new GameBoardController());
+            sceneManager.registerScene(SceneManager.SceneType.GAME_OVER, new GameOverController());
+            sceneManager.registerScene(SceneManager.SceneType.SETTINGS, new SettingsController());
+
+            // Switch to main menu
+            sceneManager.switchToScene(SceneManager.SceneType.MAIN_MENU);
 
             // Center window on screen
             centerWindowOnScreen(primaryStage);
@@ -58,19 +66,6 @@ public class GuiApplication extends Application {
             System.err.println("Error starting GUI application: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Creates a placeholder scene while full GUI is being developed.
-     * This will be replaced with proper scene management system.
-     */
-    private Scene createPlaceholderScene() {
-        StackPane root = new StackPane();
-        Label welcomeLabel = new Label("Welcome to Greenfield Minesweeper!\nGUI coming soon...");
-        welcomeLabel.setStyle("-fx-font-size: 24px; -fx-text-alignment: center;");
-        root.getChildren().add(welcomeLabel);
-        
-        return new Scene(root, INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT);
     }
 
     /**
