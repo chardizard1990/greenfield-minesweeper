@@ -172,4 +172,92 @@ public class GameBoardView extends VBox {
     public GameBoardViewModel getViewModel() {
         return viewModel;
     }
+    
+    /**
+     * Play reveal animation for a single tile.
+     * 
+     * @param row Row index
+     * @param col Column index
+     */
+    public void playTileRevealAnimation(int row, int col) {
+        TileView tileView = getTileView(row, col);
+        if (tileView != null) {
+            tileView.playRevealAnimation();
+        }
+    }
+    
+    /**
+     * Play cascade animation for revealed tiles.
+     * 
+     * When a tile with 0 adjacent mines is revealed, surrounding safe tiles
+     * are revealed with staggered animation for visual effect.
+     * 
+     * @param originRow Origin tile row
+     * @param originCol Origin tile column
+     * @param revealedTiles 2D boolean array indicating which tiles were revealed
+     */
+    public void playCascadeAnimation(int originRow, int originCol, boolean[][] revealedTiles) {
+        int height = viewModel.getBoardHeight();
+        int width = viewModel.getBoardWidth();
+        
+        // Find all tiles in cascade and calculate distance from origin
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (revealedTiles[row][col] && (row != originRow || col != originCol)) {
+                    // Calculate Manhattan distance for cascade effect
+                    int distance = Math.abs(row - originRow) + Math.abs(col - originCol);
+                    
+                    // Schedule animation with delay based on distance
+                    javafx.animation.PauseTransition delay = 
+                        new javafx.animation.PauseTransition(
+                            javafx.util.Duration.millis(distance * 50)
+                        );
+                    
+                    int finalRow = row;
+                    int finalCol = col;
+                    delay.setOnFinished(e -> playTileRevealAnimation(finalRow, finalCol));
+                    delay.play();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Play explosion animation for a mine tile.
+     * 
+     * @param row Row index
+     * @param col Column index
+     */
+    public void playMineExplosion(int row, int col) {
+        TileView tileView = getTileView(row, col);
+        if (tileView != null) {
+            tileView.playExplosionAnimation();
+        }
+    }
+    
+    /**
+     * Play flag animation when tile is flagged.
+     * 
+     * @param row Row index
+     * @param col Column index
+     */
+    public void playFlagAnimation(int row, int col) {
+        TileView tileView = getTileView(row, col);
+        if (tileView != null) {
+            tileView.playFlagAnimation();
+        }
+    }
+    
+    /**
+     * Play unflag animation when tile is unflagged.
+     * 
+     * @param row Row index
+     * @param col Column index
+     */
+    public void playUnflagAnimation(int row, int col) {
+        TileView tileView = getTileView(row, col);
+        if (tileView != null) {
+            tileView.playUnflagAnimation();
+        }
+    }
 }

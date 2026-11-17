@@ -12,8 +12,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.animation.Timeline;
 import com.minesweeper.gui.viewmodel.TileViewModel;
 import com.minesweeper.gui.viewmodel.TileViewModel.TileState;
+import com.minesweeper.gui.animation.TileAnimations;
 
 /**
  * Visual component representing a single Minesweeper tile.
@@ -115,6 +117,11 @@ public class TileView extends StackPane {
         symbolLabel.setFont(Font.font("Arial", getFontSize()));
         
         getChildren().addAll(numberLabel, symbolLabel);
+        
+        // Initial opacity/scale for animations
+        setOpacity(1.0);
+        setScaleX(1.0);
+        setScaleY(1.0);
     }
     
     /**
@@ -304,6 +311,61 @@ public class TileView extends StackPane {
         this.onTileFlagged = listener;
     }
     
+    /**
+     * Play reveal animation.
+     * 
+     * @return Timeline for the animation
+     */
+    public Timeline playRevealAnimation() {
+        Timeline timeline = TileAnimations.createRevealAnimation(this);
+        timeline.play();
+        return timeline;
+    }
+    
+    /**
+     * Play flag animation.
+     * 
+     * @return Timeline for the animation
+     */
+    public Timeline playFlagAnimation() {
+        Timeline timeline = TileAnimations.createFlagAnimation(symbolLabel);
+        timeline.play();
+        return timeline;
+    }
+    
+    /**
+     * Play unflag animation.
+     * 
+     * @return Timeline for the animation
+     */
+    public Timeline playUnflagAnimation() {
+        Timeline timeline = TileAnimations.createUnflagAnimation(symbolLabel);
+        timeline.play();
+        return timeline;
+    }
+    
+    /**
+     * Play explosion animation (when mine is hit).
+     * 
+     * @return Timeline for the animation
+     */
+    public Timeline playExplosionAnimation() {
+        Timeline timeline = TileAnimations.createExplosionAnimation(this);
+        timeline.play();
+        return timeline;
+    }
+    
+    /**
+     * Play pulse animation (draw attention to tile).
+     * 
+     * @return Timeline for the animation
+     */
+    public Timeline playPulseAnimation() {
+        Timeline timeline = TileAnimations.createPulseAnimation(this);
+        timeline.play();
+        return timeline;
+    }
+
     // Callback interfaces
     
     /**
