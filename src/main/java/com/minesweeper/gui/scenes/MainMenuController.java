@@ -18,13 +18,22 @@ import com.minesweeper.gui.SceneManager;
  * - Start a new game (navigate to mode selection)
  * - View settings
  * - Exit application
+ * 
+ * Uses MainMenuViewModel to manage UI state through observable properties.
+ * This demonstrates the ViewModel pattern for the other controllers to follow.
  */
 public class MainMenuController extends BaseSceneController {
     private static final int BUTTON_WIDTH = 150;
     private static final int BUTTON_HEIGHT = 50;
     private static final int BUTTON_SPACING = 20;
 
+    private Label titleLabel;
+    private Button newGameButton;
+    private Button settingsButton;
+    private Button exitButton;
+
     public MainMenuController() {
+        this.viewModel = new MainMenuViewModel();
         this.scene = createScene();
     }
 
@@ -32,22 +41,22 @@ public class MainMenuController extends BaseSceneController {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #f0f0f0;");
 
-        // Title
-        Label titleLabel = new Label("Greenfield Minesweeper");
+        // Title label - will be bound to ViewModel
+        titleLabel = new Label("Greenfield Minesweeper");
         titleLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #333333;");
 
         // Buttons
-        Button newGameButton = new Button("New Game");
+        newGameButton = new Button("New Game");
         newGameButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         newGameButton.setStyle("-fx-font-size: 14px;");
         newGameButton.setOnAction(e -> startNewGame());
 
-        Button settingsButton = new Button("Settings");
+        settingsButton = new Button("Settings");
         settingsButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         settingsButton.setStyle("-fx-font-size: 14px;");
         settingsButton.setOnAction(e -> openSettings());
 
-        Button exitButton = new Button("Exit");
+        exitButton = new Button("Exit");
         exitButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         exitButton.setStyle("-fx-font-size: 14px;");
         exitButton.setOnAction(e -> closeApplication());
@@ -63,6 +72,33 @@ public class MainMenuController extends BaseSceneController {
         return new Scene(root, 600, 400);
     }
 
+    @Override
+    public void onSceneShown(Object data) {
+        super.onSceneShown(data); // This calls viewModel.initialize()
+        
+        // Bind UI elements to ViewModel properties
+        MainMenuViewModel vm = (MainMenuViewModel) viewModel;
+        
+        // Bind title label to appTitle property
+        vm.appTitleProperty().addListener((oldVal, newVal) -> {
+            titleLabel.setText(newVal);
+        });
+        
+        // Bind button states to ViewModel properties
+        vm.newGameEnabledProperty().addListener((oldVal, newVal) -> {
+            newGameButton.setDisable(!newVal);
+        });
+        
+        vm.settingsEnabledProperty().addListener((oldVal, newVal) -> {
+            settingsButton.setDisable(!newVal);
+        });
+        
+        // Set initial UI values from ViewModel
+        titleLabel.setText(vm.getAppTitle());
+        newGameButton.setDisable(!vm.isNewGameEnabled());
+        settingsButton.setDisable(!vm.isSettingsEnabled());
+    }
+
     private void startNewGame() {
         navigateTo(SceneManager.SceneType.MODE_SELECTION);
     }
@@ -76,3 +112,4 @@ public class MainMenuController extends BaseSceneController {
         return scene;
     }
 }
+
