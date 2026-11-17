@@ -30,6 +30,7 @@ public class GameController {
     private GameRules gameRules;
     private GameStatistics statistics;
     private GameMode gameMode;
+    private CustomGameMode customGameMode;
     private AIPlayer aiPlayer;
     private boolean isHumanVsAI;
 
@@ -42,19 +43,35 @@ public class GameController {
      * @throws IllegalArgumentException if any parameter is null
      */
     public GameController(String gameId, GameRules gameRules, GameMode gameMode) {
+        this(gameId, gameRules, gameMode, null);
+    }
+
+    /**
+     * Creates a controller for a custom configuration without labelling it as a preset.
+     */
+    public static GameController forCustomGame(String gameId, CustomGameMode mode) {
+        if (mode == null) {
+            throw new IllegalArgumentException("Custom game mode cannot be null");
+        }
+        return new GameController(gameId, GameFactory.createGame(mode), null, mode);
+    }
+
+    private GameController(String gameId, GameRules gameRules, GameMode gameMode,
+                           CustomGameMode customGameMode) {
         if (gameId == null || gameId.isEmpty()) {
             throw new IllegalArgumentException("Game ID cannot be null or empty");
         }
         if (gameRules == null) {
             throw new IllegalArgumentException("GameRules cannot be null");
         }
-        if (gameMode == null) {
+        if (gameMode == null && customGameMode == null) {
             throw new IllegalArgumentException("GameMode cannot be null");
         }
 
         this.gameId = gameId;
         this.gameRules = gameRules;
         this.gameMode = gameMode;
+        this.customGameMode = customGameMode;
         this.statistics = new GameStatistics();
         this.isHumanVsAI = false;
     }
@@ -68,8 +85,14 @@ public class GameController {
         return gameRules;
     }
 
+    /** Returns the preset mode, or null for a custom game. */
     public GameMode getGameMode() {
         return gameMode;
+    }
+
+    /** Returns the custom configuration, or null for a preset game. */
+    public CustomGameMode getCustomGameMode() {
+        return customGameMode;
     }
 
     public GameState getGameState() {
@@ -165,7 +188,7 @@ public class GameController {
     private MoveResult handleRevealMove(PlayerMove move) {
         RevealResult revealResult = gameRules.revealTile(move.getRow(), move.getColumn());
 
-        if (!revealResult.isSuccess()) {
+        if (!revealResult.isSuccess() && !revealResult.isHitMine()) {
             return new MoveResult(
                     MoveResult.Outcome.MOVE_EXECUTION_FAILED,
                     gameRules.getGameState(),

@@ -129,17 +129,11 @@ public class GameBoardView extends VBox {
         switch (state) {
             case ACTIVE:
                 // Allow tile interactions
-                setDisabled(false);
+                gridPane.setMouseTransparent(false);
                 break;
             case WON:
-                // Disable interactions, show win state
-                setDisabled(false);
-                // Could add overlay or styling here
-                break;
             case LOST:
-                // Disable interactions, show loss state
-                setDisabled(false);
-                // Could add overlay or styling here
+                gridPane.setMouseTransparent(true);
                 break;
         }
     }

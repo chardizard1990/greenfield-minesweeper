@@ -160,10 +160,11 @@ public class TileView extends StackPane {
      * Handle mouse click events (left and right).
      */
     private void handleMouseClick(MouseEvent event) {
-        if (viewModel.getTileState() == TileState.UNREVEALED) {
+        if (viewModel.getTileState() == TileState.UNREVEALED
+                || viewModel.getTileState() == TileState.FLAGGED) {
             if (event.getButton() == MouseButton.PRIMARY) {
                 // Left click - reveal
-                if (onTileClicked != null) {
+                if (viewModel.getTileState() == TileState.UNREVEALED && onTileClicked != null) {
                     onTileClicked.onTileClicked(viewModel.getRow(), viewModel.getCol());
                 }
                 event.consume();

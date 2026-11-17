@@ -1,5 +1,10 @@
 # Ticket 15: Tile Animation System
 
+**Status: Incomplete.** Animation factories and manual entry points exist, but
+they are not connected to gameplay. The disable option, actual flip effect,
+cascade presentation, and large-board performance have not been verified.
+The prior completion report was incorrect.
+
 ## Objective
 Implement smooth animations for tile state transitions. This adds polish and visual feedback to tile reveals, flagging, and game events.
 

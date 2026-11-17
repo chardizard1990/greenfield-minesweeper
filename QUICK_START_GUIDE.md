@@ -8,10 +8,13 @@ cd greenfield-minesweeper
 mvn javafx:run
 ```
 This launches the new JavaFX graphical interface with:
-- Beautiful desktop GUI
-- Point-and-click gameplay
-- Real-time board animations
-- Settings panel
+- Preset and custom board selection
+- Left-click to reveal; right-click to flag or unflag
+- New game, restart, mine count, elapsed time and status
+
+The settings screen is a placeholder, and game animations are not yet wired in.
+Custom boards accept widths and heights from 1 to 50, with fewer mines than tiles.
+Large boards can be scrolled.
 
 ### Option 2: Console Gameplay (Classic)
 ```bash
@@ -31,7 +34,7 @@ mvn test
 
 ---
 
-## How to Play
+## Console: How to Play
 
 ### Main Menu
 ```
@@ -236,47 +239,26 @@ greenfield-minesweeper/
     │   ├── ObservablePropertyTest.java
     │   ├── PropertyBindingTest.java
     │   └── ViewModelTest.java
-    └── ... (other test suites - 216 tests total)
+    └── ... (other test suites)
 ```
 
 ---
 
 ## Project Status
 
-✅ **MVP Features Complete**:
-- Core game logic
-- Console interface
-- AI opponent
-- Difficulty modes
-- Game controller
-- Statistics tracking
-- Comprehensive tests (198/216 passing - see note below)
+The GUI supports solo preset and custom games with a playable board and game
+controls. AI play, settings, the separate results screen, and tile animation
+integration remain future work.
 
-✅ **GUI Foundation Complete** (Ticket 11-12):
-- JavaFX application setup
-- Scene management system
-- MVC/MVVM pattern with data binding
-- Observable properties for reactive UI
-- Main menu controller (working example)
-- 18 new ViewModel unit tests (all passing)
+The standard `mvn test` run skips desktop-dependent GUI tests. On a machine
+with a desktop session, run them with:
 
-🔮 **In Progress - GUI Implementation**:
-- Tile rendering system
-- Interactive game board grid
-- Tile animations
-- Mode selection scene
-- Game controls and UI
-- Game over screen
-- Settings panel
+```bash
+mvn test -Dtest=GameFlowTest -Djavafx.integration=true
+```
 
-🔮 **Future Enhancements**:
-- Save/load game state
-- Leaderboards
-- Game replay system
-- Advanced AI strategies
-- Theme system
-
-**Note on Flaky Tests**: One integration test (`GameIntegrationTest::testMultipleDifficultyLevelsPlayDifferently`) has timing-dependent behavior due to random board generation. It fails occasionally (~50% of the time) but passes on retry. This is unrelated to GUI changes and exists in the MVP tests. All ViewModel and core game logic tests are stable and 100% passing.
+Some existing console and integration tests use random boards and can fail
+intermittently.
 
 ---
 

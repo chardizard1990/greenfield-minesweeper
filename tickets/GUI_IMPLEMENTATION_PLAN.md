@@ -101,21 +101,21 @@ GUI Layer (NEW - JavaFX)
 ### Phase 3: Game Controls & Modes (Tickets 16-18)
 
 #### Ticket 16: Mode Selection Scene
-- [ ] Create Mode Selection UI scene
-- [ ] Implement buttons for EASY, MEDIUM, HARD, CUSTOM
-- [ ] Create custom mode input dialog
-- [ ] Wire mode selection to GameFactory
-- [ ] Implement scene transition to game board
+- [x] Create Mode Selection UI scene
+- [x] Implement buttons for EASY, MEDIUM, HARD, CUSTOM
+- [x] Create custom mode input dialog
+- [x] Wire mode selection to GameFactory
+- [x] Implement scene transition to game board
 - **Definition of Done:**
   - All modes are selectable
   - Custom mode allows dimension input
   - Mode selection properly launches game
 
 #### Ticket 17: Game Controls & Information Display
-- [ ] Create game control bar (new game, restart, settings)
-- [ ] Display remaining mine count
-- [ ] Display timer/elapsed time
-- [ ] Display game status (active, won, lost)
+- [x] Create game control bar (new game, restart, settings navigation)
+- [x] Display remaining mine count
+- [x] Display timer/elapsed time
+- [x] Display game status (active, won, lost)
 - [ ] Implement pause functionality (future)
 - **Definition of Done:**
   - All controls are clickable and functional
